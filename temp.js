@@ -22,3 +22,6 @@ gulp.task('xxxx', function () {
  * 
  */
 const xxx = require('xxx');
+
+const { error } = require('console');
+const { title } = require('process');

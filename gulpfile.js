@@ -1,21 +1,45 @@
-/* ============== MAIN ============== */
+/* ============== VARS ============== */
+
 const gulp = require('gulp');
 const fileInclude = require('gulp-file-include'); // для использования include в html файлах
+
 /** подключаем sass
  * 
  */
 const sass = require('gulp-sass')(require('sass'));
+
 /** сервер обновления страницы
  * 
  * 
  */
 const server = require('gulp-server-livereload');
+
 /** удаление папки dist - gulp-clean
  * @fs - для работы с файловой системой
  * 
  */
 const clean = require('gulp-clean');
 const fs = require('fs');
+
+/** Исходные карты для scss
+ * 
+ * 
+ */
+const sourceMaps = require('gulp-sourcemaps');
+
+/** Объединяем медиа запросы
+ * заблокировано, так как при использовании ломает исходные карты
+ * 
+ */
+const groupMedia = require('gulp-group-css-media-queries');
+
+/** отображение ошибок
+ * 
+ * 
+ */
+const plumber = require('gulp-plumber');
+const notify = require('gulp-notify');
+
 
 
 /* ============== VARS ============== */
@@ -28,6 +52,7 @@ const fileIncludeConfig = {
     prefix: '@@',
     basepath: '@file'
 }
+
 /** конфиг для startServer
  * 
  * 
@@ -38,6 +63,21 @@ const startServerConfig = {
 }
 
 
+/* ============== FUNCTIONS ============== */
+
+/** функция для plumber
+ * @title - передаем в переменную параметр для наблюдения, html, scss каждый в своих тасках
+ * 
+ */
+const plumberNotify = (title) => {
+    return {
+        errorHandler: notify.onError({
+            title: title,
+            message: 'Error <%= error.message %>',
+            sound: false
+        })
+    }
+}
 
 
 /* ============== TASKS ============== */
@@ -45,9 +85,11 @@ const startServerConfig = {
 /** HTML
  * include for HTML
  * объеденяем все файлы для html, позволяет разделять блоки в разные файлы
+ * plumber(plumberNotify('html')) - отслеживание ошибок при работе с файлами, передаем функцию plumberNotify('html') - со значением html
  */
 gulp.task('html', function () {
     return gulp.src('./src/*.html')
+        .pipe(plumber(plumberNotify('html')))
         .pipe(fileInclude({ fileIncludeConfig }))
         .pipe(gulp.dest('./dist/'))
 });
@@ -55,10 +97,18 @@ gulp.task('html', function () {
 /** SASS
  * обработка scss файлов
  * все файлы в папке scss вне зависимости от вложенности
+ * sourceMaps.init() - инициализируем карты scss
+ * sourceMaps.write() - записываем данные значений scss
+ * groupMedia() - обрабатываем запросы на объединения media запросов /пока отключено, ломаются sourceMaps/
+ * plumber(plumberSassConfig) - для отслеживания ошибок, и их отображения
  */
 gulp.task('sass', function () {
     return gulp.src('./src/scss/*.scss')
+        .pipe(plumber(plumberNotify('SCSS')))
+        .pipe(sourceMaps.init())
         .pipe(sass())
+        // .pipe(groupMedia())
+        .pipe(sourceMaps.write())
         .pipe(gulp.dest('./dist/css'))
 });
 
@@ -69,6 +119,24 @@ gulp.task('sass', function () {
 gulp.task('images', function () {
     return gulp.src('./src/img/**/*')
         .pipe(gulp.dest('./dist/img/'))
+});
+
+/** fonts
+ * Копирование шрифтов
+ * @src - любая папка внутри img и любой файл
+ */
+gulp.task('fonts', function () {
+    return gulp.src('./src/fonts/**/*')
+        .pipe(gulp.dest('./dist/fonts/'))
+});
+
+/** files
+ * Копирование файлов для загрузки и скачивания на сайте
+ * @src - любая папка внутри img и любой файл
+ */
+gulp.task('files', function () {
+    return gulp.src('./src/files/**/*')
+        .pipe(gulp.dest('./dist/files/'))
 });
 
 /** server
@@ -86,12 +154,12 @@ gulp.task('server', function () {
  * @clean({read: false}) - дает возможность удалить принудительно файлы
  */
 gulp.task('clean', function (done) {
-    if (fs.existsSync('./dist/'), {read: false}) {
+    if (fs.existsSync('./dist/'), { read: false }) {
         return gulp.src('./dist/')
             .pipe(clean())
     }
     done();
-}); 
+});
 
 /** watch
  * *.scss, *.html - слежение за изменениями во всех файлах, любой уровень вложенности
@@ -101,6 +169,8 @@ gulp.task('watch', function () {
     gulp.watch('./src/scss/**/*.scss', gulp.parallel('sass'));
     gulp.watch('./src/**/*.html', gulp.parallel('html'));
     gulp.watch('./src/img/**/*', gulp.parallel('images'));
+    gulp.watch('./src/fonts/**/*', gulp.parallel('fonts'));
+    gulp.watch('./src/files/**/*', gulp.parallel('files'));
 });
 
 /* ============== USE TASK ============== */
@@ -112,7 +182,7 @@ gulp.task('watch', function () {
  * 'server', 'watch' - и только в конце в любом порядке обновление страницы и слежение за файлами
  */
 gulp.task('default', gulp.series(
-    'clean', 
-    gulp.parallel('html', 'sass', 'images'),
+    'clean',
+    gulp.parallel('html', 'sass', 'images', 'fonts', 'files'),
     gulp.parallel('server', 'watch')
 ));
