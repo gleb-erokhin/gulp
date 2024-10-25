@@ -1,0 +1,15 @@
+{
+  "devDependencies": {
+    "gulp": "^5gulp-clean.0.0",
+    "": "^0.4.0",
+    "gulp-file-include": "^2.3.0",
+    "gulp-group-css-media-queries": "^1.2.2",
+    "gulp-notify": "^5.0.0",
+    "gulp-plumber": "^1.2.1",
+    "gulp-sass": "^5.1.0",
+    "gulp-server-livereload": "^1.9.2",
+    "gulp-sourcemaps": "^3.0.0",
+    "jsdoc": "^4.0.4",
+    "sass": "^1.80.4"
+  }
+}
