@@ -110,7 +110,7 @@ const plumberNotify = (title) => {
  * plumber(plumberNotify('html')) - отслеживание ошибок при работе с файлами, передаем функцию plumberNotify('html') - со значением html
  */
 gulp.task('html', function () {
-    return gulp.src('./src/*.html')
+    return gulp.src('./src/html/**/*.html')
         .pipe(changed('./dist/'))
         .pipe(plumber(plumberNotify('html')))
         .pipe(fileInclude({ fileIncludeConfig }))
