@@ -1,7 +1,8 @@
 {
   "devDependencies": {
-    "gulp": "^5gulp-clean.0.0",
-    "": "^0.4.0",
+    "css-loader": "^7.1.2",
+    "gulp": "^4.0.0",
+    "gulp-clean": "^0.4.0",
     "gulp-file-include": "^2.3.0",
     "gulp-group-css-media-queries": "^1.2.2",
     "gulp-notify": "^5.0.0",
@@ -10,6 +11,8 @@
     "gulp-server-livereload": "^1.9.2",
     "gulp-sourcemaps": "^3.0.0",
     "jsdoc": "^4.0.4",
-    "sass": "^1.80.4"
+    "sass": "^1.80.4",
+    "style-loader": "^4.0.0",
+    "webpack-stream": "^7.0.0"
   }
 }

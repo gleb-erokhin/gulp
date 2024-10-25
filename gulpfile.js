@@ -40,6 +40,11 @@ const groupMedia = require('gulp-group-css-media-queries');
 const plumber = require('gulp-plumber');
 const notify = require('gulp-notify');
 
+/** webpack
+ * 
+ * 
+ */
+const webpack = require('webpack-stream');
 
 
 /* ============== VARS ============== */
@@ -139,6 +144,19 @@ gulp.task('files', function () {
         .pipe(gulp.dest('./dist/files/'))
 });
 
+/** JS
+ * src('./src/js/*.js') - забираем все файлы в папке js и объеденяем в один файл
+ * файл js будет для каждой страницы, после чего он объединяется в один файл js
+ * документация по нему в файле webpack.config.js
+ * plumberNotify('JS') - добавляем для отслеживания ошибок
+ */
+gulp.task('js', function () {
+    return gulp.src('./src/js/*.js')
+        .pipe(plumber(plumberNotify('JS')))
+        .pipe(webpack(require('./webpack.config.js')))
+        .pipe(gulp.dest('./dist/js'))
+});
+
 /** server
  * @src - забираем файлы для просмотра из папки dist
  * 
@@ -171,6 +189,7 @@ gulp.task('watch', function () {
     gulp.watch('./src/img/**/*', gulp.parallel('images'));
     gulp.watch('./src/fonts/**/*', gulp.parallel('fonts'));
     gulp.watch('./src/files/**/*', gulp.parallel('files'));
+    gulp.watch('./src/js/**/*.js', gulp.parallel('js'));
 });
 
 /* ============== USE TASK ============== */
@@ -183,6 +202,6 @@ gulp.task('watch', function () {
  */
 gulp.task('default', gulp.series(
     'clean',
-    gulp.parallel('html', 'sass', 'images', 'fonts', 'files'),
+    gulp.parallel('html', 'sass', 'images', 'fonts', 'files', 'js'),
     gulp.parallel('server', 'watch')
 ));
