@@ -3,8 +3,8 @@ const config = {
 	mode: 'production',
 	entry: {
         // откуда будем забирать файлы, все пути
-		index: './src/js/index.js'
-		// contacts: './src/js/contacts.js',
+		index: './src/js/index.js',
+		contacts: './src/js/contacts.js',
 		// about: './src/js/about.js',
 	},
 	output: {
