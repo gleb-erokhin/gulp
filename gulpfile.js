@@ -52,6 +52,18 @@ const webpack = require('webpack-stream');
  */
 const babel = require('gulp-babel');
 
+/** imagemin
+ * для сжатия картинок
+ * 
+ */
+const imageMin = require('gulp-imagemin');
+
+/** 
+ * использование в картинках, HTML, JS, CSS
+ * 
+ */
+const changed = require('gulp-changed');
+
 /* ============== VARS ============== */
 
 /** конфиг для includeFiles
@@ -99,6 +111,7 @@ const plumberNotify = (title) => {
  */
 gulp.task('html', function () {
     return gulp.src('./src/*.html')
+        .pipe(changed('./dist/'))
         .pipe(plumber(plumberNotify('html')))
         .pipe(fileInclude({ fileIncludeConfig }))
         .pipe(gulp.dest('./dist/'))
@@ -114,6 +127,7 @@ gulp.task('html', function () {
  */
 gulp.task('sass', function () {
     return gulp.src('./src/scss/*.scss')
+        .pipe(changed('./dist/css'))
         .pipe(plumber(plumberNotify('SCSS')))
         .pipe(sourceMaps.init())
         .pipe(sass())
@@ -125,9 +139,11 @@ gulp.task('sass', function () {
 /** images
  * Копирование изображений
  * @src - любая папка внутри img и любой файл
- */
+*/
 gulp.task('images', function () {
     return gulp.src('./src/img/**/*')
+        .pipe(changed('./dist/img/'))
+        .pipe(imageMin({ verbose: true }))
         .pipe(gulp.dest('./dist/img/'))
 });
 
@@ -137,6 +153,7 @@ gulp.task('images', function () {
  */
 gulp.task('fonts', function () {
     return gulp.src('./src/fonts/**/*')
+        .pipe(changed('./dist/fonts/'))
         .pipe(gulp.dest('./dist/fonts/'))
 });
 
@@ -146,6 +163,7 @@ gulp.task('fonts', function () {
  */
 gulp.task('files', function () {
     return gulp.src('./src/files/**/*')
+        .pipe(changed('./dist/files/'))
         .pipe(gulp.dest('./dist/files/'))
 });
 
@@ -158,6 +176,7 @@ gulp.task('files', function () {
  */
 gulp.task('js', function () {
     return gulp.src('./src/js/*.js')
+        .pipe(changed('./dist/js/'))
         .pipe(plumber(plumberNotify('JS')))
         .pipe(babel())
         .pipe(webpack(require('./webpack.config.js')))
