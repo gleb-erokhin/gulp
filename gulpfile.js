@@ -198,7 +198,7 @@ gulp.task('server', function () {
  * @clean({read: false}) - дает возможность удалить принудительно файлы
  */
 gulp.task('clean', function (done) {
-    if (fs.existsSync('./dist/'), { read: false }) {
+    if (fs.existsSync('./dist/')) {
         return gulp.src('./dist/')
             .pipe(clean())
     }
