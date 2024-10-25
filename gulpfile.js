@@ -46,6 +46,11 @@ const notify = require('gulp-notify');
  */
 const webpack = require('webpack-stream');
 
+/** bable
+ * добавляем в таск JS
+ * 
+ */
+const babel = require('gulp-babel');
 
 /* ============== VARS ============== */
 
@@ -149,10 +154,12 @@ gulp.task('files', function () {
  * файл js будет для каждой страницы, после чего он объединяется в один файл js
  * документация по нему в файле webpack.config.js
  * plumberNotify('JS') - добавляем для отслеживания ошибок
+ * babel() - конфиг добавляем в файле packege.json
  */
 gulp.task('js', function () {
     return gulp.src('./src/js/*.js')
         .pipe(plumber(plumberNotify('JS')))
+        .pipe(babel())
         .pipe(webpack(require('./webpack.config.js')))
         .pipe(gulp.dest('./dist/js'))
 });
