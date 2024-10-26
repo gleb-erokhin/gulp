@@ -1,9 +1,11 @@
-nav {
-    background-color: #434343;
-    color: rgb(255, 255, 255);
-    padding: 30px 0;
+.header__nav {
 }
-
-a {
-    color: #fff;
+.nav {
+	font-size: 18px;
+}
+.nav__list {
+	display: flex;
+	column-gap: 30px;
+}
+.active {
 }
