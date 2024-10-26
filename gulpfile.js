@@ -22,5 +22,5 @@ gulp.task('default', gulp.series(
 gulp.task('docs', gulp.series(
     'clean:docs',
     gulp.parallel('html:docs', 'sass:docs', 'images:docs', 'fonts:docs', 'files:docs', 'js:docs'),
-    gulp.parallel('server:docs', 'watch:docs')
+    gulp.parallel('server:docs')
 ));
