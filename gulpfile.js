@@ -4,9 +4,10 @@ const gulp = require('gulp');
 const fileInclude = require('gulp-file-include'); // для использования include в html файлах
 
 /** подключаем sass
- * 
+ * @sassGlob - необходим для упрощенного подключения частей файлов scss
  */
 const sass = require('gulp-sass')(require('sass'));
+const sassGlob = require('gulp-sass-glob');
 
 /** сервер обновления страницы
  * 
@@ -131,6 +132,7 @@ gulp.task('sass', function () {
         .pipe(changed('./dist/css'))
         .pipe(plumber(plumberNotify('SCSS')))
         .pipe(sourceMaps.init())
+        .pipe(sassGlob())
         .pipe(sass())
         // .pipe(groupMedia())
         .pipe(sourceMaps.write())
