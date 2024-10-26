@@ -59,6 +59,13 @@ const imageMin = require('gulp-imagemin');
  */
 const changed = require('gulp-changed');
 
+/** replace
+ * меняет пути к фото до необходимого, а при разработке мы пишем путь полный как начнет подсказывать VScode
+ * 
+ */
+const replace = require('gulp-replace');
+
+
 /* ============== VARS ============== */
 
 /** конфиг для includeFiles
@@ -78,7 +85,6 @@ const startServerConfig = {
     livereload: true,
     open: true
 }
-
 
 /* ============== FUNCTIONS ============== */
 
@@ -110,6 +116,11 @@ gulp.task('html:dev', function () {
         .pipe(changed('./build/', { hasChanged: changed.compareContents }))
         .pipe(plumber(plumberNotify('html')))
         .pipe(fileInclude({ fileIncludeConfig }))
+        .pipe(
+            replace(
+                /(?<=src=|href=|srcset=)(['"])(\.(\.)?\/)*(img|images|fonts|css|scss|sass|js|files|audio|video)(\/[^\/'"]+(\/))?([^'"]*)\1/gi,
+                '$1./$4$5$7$1'
+            ))
         .pipe(gulp.dest('./build/'))
 });
 
@@ -128,6 +139,12 @@ gulp.task('sass:dev', function () {
         .pipe(sourceMaps.init())
         .pipe(sassGlob())
         .pipe(sass())
+        .pipe(
+            replace(
+                /(['"]?)(\.\.\/)+(img|images|fonts|css|scss|sass|js|files|audio|video)(\/[^\/'"]+(\/))?([^'"]*)\1/gi,
+                '$1$2$3$4$6$1'
+            )
+        )
         .pipe(sourceMaps.write())
         .pipe(gulp.dest('./build/css'))
 });
