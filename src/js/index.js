@@ -1,1 +1,2 @@
-console.log('index');
+import mobileNav from './modules/mobile-nav.js';
+mobileNav();

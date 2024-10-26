@@ -14,6 +14,12 @@ const fileInclude = require('gulp-file-include'); //
  */
 const htmlclean = require('gulp-htmlclean');
 
+/** webphtml
+ * 
+ * 
+ */
+const webphtml = require('gulp-webp-html');
+
 /** подключаем sass
  * @sassGlob - необходим для упрощенного подключения частей файлов scss
  */
@@ -38,6 +44,12 @@ const csso = require('gulp-csso');
  */
 // const sourceMaps = require('gulp-sourcemaps');
 
+/** webpcss
+ * 
+ * 
+ */
+const webpcss = require('gulp-webp-css');
+
 /** сервер обновления страницы
  * 
  * 
@@ -50,7 +62,6 @@ const server = require('gulp-server-livereload');
  */
 const clean = require('gulp-clean');
 const fs = require('fs');
-
 
 /** Объединяем медиа запросы
  * заблокировано, так как при использовании ломает исходные карты
@@ -82,6 +93,12 @@ const babel = require('gulp-babel');
  * 
  */
 const imageMin = require('gulp-imagemin');
+
+/** webp
+ * 
+ * 
+ */
+const webp = require('gulp-webp');
 
 /** 
  * использование в картинках, HTML, JS, CSS
@@ -133,12 +150,14 @@ const plumberNotify = (title) => {
  * plumber(plumberNotify('html')) - отслеживание ошибок при работе с файлами, передаем функцию plumberNotify('html') - со значением html
  * ['path', '!path'] - при необходимости забирать html из разных папок можно с помощью массива передавать в src, ! знак исключает добавление в сборку
  * htmlclean() - убират все пробелы и переносы в файле html
+ * webphtml() - автоматически добавляет теги picture и sorce для использования webp изображения
  */
 gulp.task('html:docs', function () {
     return gulp.src(['./src/html/**/*.html', '!./src/html/blocks/*.html'])
         .pipe(changed('./docs/'))
         .pipe(plumber(plumberNotify('html')))
         .pipe(fileInclude({ fileIncludeConfig }))
+        .pipe(webphtml())
         .pipe(htmlclean())
         .pipe(gulp.dest('./docs/'))
 });
@@ -160,6 +179,7 @@ gulp.task('sass:docs', function () {
         // .pipe(sourceMaps.init())
         .pipe(autoprefixer())
         .pipe(sassGlob())
+        .pipe(webpcss())
         .pipe(groupMedia())
         .pipe(sass())
         .pipe(csso())
@@ -170,9 +190,15 @@ gulp.task('sass:docs', function () {
 /** images
  * Копирование изображений
  * @src - любая папка внутри img и любой файл
+ * webp() - конвертация в webp картинку, работаем в два этапа, сначала проверяем картинки изменились они или нет, затем преобразовываем в webp сохраняем в папку dest, а потом опять берем и этой папки обрабатываем уже через imagemin и возвращаем в папку dest, все это используется с changed() чтобы так же не обрабатывать уже готовые файлы
 */
 gulp.task('images:docs', function () {
     return gulp.src('./src/img/**/*')
+        .pipe(changed('./docs/img/'))
+        .pipe(webp())
+        .pipe(gulp.dest('./docs/img/'))
+
+        .pipe(gulp.src('./src/img/**/*'))
         .pipe(changed('./docs/img/'))
         .pipe(imageMin({ verbose: true }))
         .pipe(gulp.dest('./docs/img/'))
