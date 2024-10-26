@@ -2,9 +2,11 @@ header {
     background-color: #65b0b3;
     padding: 100px 0;
     color: #000;
+    box-sizing: border-box;
 }
 
 h1 {
     color: #65b0b3;
     font-size: 70px;
+    display: flex;
 }

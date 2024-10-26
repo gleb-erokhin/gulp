@@ -1,13 +1,42 @@
 /* ============== VARS ============== */
 
 const gulp = require('gulp');
-const fileInclude = require('gulp-file-include'); // для использования include в html файлах
+
+/** Include
+ * для использования include в html файлах
+ * 
+ */
+const fileInclude = require('gulp-file-include'); //
+
+/** htmlclean
+ * 
+ * 
+ */
+const htmlclean = require('gulp-htmlclean');
 
 /** подключаем sass
  * @sassGlob - необходим для упрощенного подключения частей файлов scss
  */
 const sass = require('gulp-sass')(require('sass'));
 const sassGlob = require('gulp-sass-glob');
+
+/** autoprefixer
+ * 
+ * 
+ */
+const autoprefixer = require('gulp-autoprefixer');
+
+/** gulp-csso
+ * 
+ * 
+ */
+const csso = require('gulp-csso');
+
+/** Исходные карты для scss
+ * 
+ * 
+ */
+// const sourceMaps = require('gulp-sourcemaps');
 
 /** сервер обновления страницы
  * 
@@ -22,11 +51,6 @@ const server = require('gulp-server-livereload');
 const clean = require('gulp-clean');
 const fs = require('fs');
 
-/** Исходные карты для scss
- * 
- * 
- */
-const sourceMaps = require('gulp-sourcemaps');
 
 /** Объединяем медиа запросы
  * заблокировано, так как при использовании ломает исходные карты
@@ -85,7 +109,6 @@ const startServerConfig = {
     open: true
 }
 
-
 /* ============== FUNCTIONS ============== */
 
 /** функция для plumber
@@ -102,7 +125,6 @@ const plumberNotify = (title) => {
     }
 }
 
-
 /* ============== TASKS ============== */
 
 /** HTML
@@ -110,12 +132,14 @@ const plumberNotify = (title) => {
  * объеденяем все файлы для html, позволяет разделять блоки в разные файлы
  * plumber(plumberNotify('html')) - отслеживание ошибок при работе с файлами, передаем функцию plumberNotify('html') - со значением html
  * ['path', '!path'] - при необходимости забирать html из разных папок можно с помощью массива передавать в src, ! знак исключает добавление в сборку
+ * htmlclean() - убират все пробелы и переносы в файле html
  */
 gulp.task('html:docs', function () {
     return gulp.src(['./src/html/**/*.html', '!./src/html/blocks/*.html'])
         .pipe(changed('./docs/'))
         .pipe(plumber(plumberNotify('html')))
         .pipe(fileInclude({ fileIncludeConfig }))
+        .pipe(htmlclean())
         .pipe(gulp.dest('./docs/'))
 });
 
@@ -126,15 +150,19 @@ gulp.task('html:docs', function () {
  * sourceMaps.write() - записываем данные значений scss
  * groupMedia() - обрабатываем запросы на объединения media запросов /пока отключено, ломаются sourceMaps, groupMedia() - должна быть подключена до sass() тогда исходные карты не ломаются
  * plumber(plumberSassConfig) - для отслеживания ошибок, и их отображения
+ * autoprefixer - для добавления префиксов
+ * csso - минификация файла css, убирает все пробелы и отступы
  */
 gulp.task('sass:docs', function () {
     return gulp.src('./src/scss/*.scss')
         .pipe(changed('./docs/css'))
         .pipe(plumber(plumberNotify('SCSS')))
         // .pipe(sourceMaps.init())
+        .pipe(autoprefixer())
         .pipe(sassGlob())
         .pipe(groupMedia())
         .pipe(sass())
+        .pipe(csso())
         // .pipe(sourceMaps.write())
         .pipe(gulp.dest('./docs/css'))
 });
