@@ -108,9 +108,10 @@ const plumberNotify = (title) => {
  * include for HTML
  * объеденяем все файлы для html, позволяет разделять блоки в разные файлы
  * plumber(plumberNotify('html')) - отслеживание ошибок при работе с файлами, передаем функцию plumberNotify('html') - со значением html
+ * ['path', '!path'] - при необходимости забирать html из разных папок можно с помощью массива передавать в src, ! знак исключает добавление в сборку
  */
 gulp.task('html', function () {
-    return gulp.src('./src/html/**/*.html')
+    return gulp.src(['./src/html/**/*.html', '!./src/html/blocks/*.html'])
         .pipe(changed('./dist/'))
         .pipe(plumber(plumberNotify('html')))
         .pipe(fileInclude({ fileIncludeConfig }))
