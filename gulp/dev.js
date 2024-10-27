@@ -15,7 +15,7 @@ const sassGlob = require('gulp-sass-glob');
  */
 const server = require('gulp-server-livereload');
 
-/** удаление папки dist - gulp-clean
+/** удаление папки dist / docs - gulp-clean
  * @fs - для работы с файловой системой
  * 
  */
@@ -212,7 +212,7 @@ gulp.task('server:dev', function () {
  */
 gulp.task('clean:dev', function (done) {
     if (fs.existsSync('./build/')) {
-        return gulp.src('./build/')
+        return gulp.src('./build/', { read: false })
             .pipe(clean())
     }
     done();
