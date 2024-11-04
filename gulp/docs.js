@@ -109,6 +109,12 @@ const webp = require('gulp-webp');
  */
 const changed = require('gulp-changed');
 
+/** replace
+ * меняет пути к фото до необходимого, а при разработке мы пишем путь полный как начнет подсказывать VScode
+ * 
+ */
+const replace = require('gulp-replace');
+
 /* ============== VARS ============== */
 
 /** конфиг для includeFiles
@@ -160,6 +166,12 @@ gulp.task('html:docs', function () {
         .pipe(changed('./docs/'))
         .pipe(plumber(plumberNotify('html')))
         .pipe(fileInclude({ fileIncludeConfig }))
+        .pipe(
+            replace(
+                /(['"]?)(\.\.\/)+(img|images|fonts|css|scss|sass|js|files|audio|video)(\/[^\/'"]+(\/))?([^'"]*)\1/gi,
+                '$1$2$3$4$6$1'
+            )
+        )
         .pipe(webphtml())
         .pipe(htmlclean())
         .pipe(gulp.dest('./docs/'))
@@ -185,6 +197,12 @@ gulp.task('sass:docs', function () {
         .pipe(webpcss())
         .pipe(groupMedia())
         .pipe(sass())
+        .pipe(
+            replace(
+                /(['"]?)(\.\.\/)+(img|images|fonts|css|scss|sass|js|files|audio|video)(\/[^\/'"]+(\/))?([^'"]*)\1/gi,
+                '$1$2$3$4$6$1'
+            )
+        )
         .pipe(csso())
         // .pipe(sourceMaps.write())
         .pipe(gulp.dest('./docs/css'))

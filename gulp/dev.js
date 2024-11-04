@@ -133,7 +133,7 @@ gulp.task('html:dev', function () {
  * plumber(plumberSassConfig) - для отслеживания ошибок, и их отображения
  */
 gulp.task('sass:dev', function () {
-    return gulp.src('./src/scss/*.scss')
+    return gulp.src(['./src/scss/*.scss', './src/libs/*.css', '!./src/libs/temp/'])
         .pipe(changed('./build/css'))
         .pipe(plumber(plumberNotify('SCSS')))
         .pipe(sourceMaps.init())
@@ -178,6 +178,16 @@ gulp.task('files:dev', function () {
     return gulp.src('./src/files/**/*')
         .pipe(changed('./build/files/'))
         .pipe(gulp.dest('./build/files/'))
+});
+
+/** libs
+ * Копирование файлов стороних библиотек для использования в проекте, обработка файлов js идет из папки libs
+ * @src - любая папка внутри img и любой файл
+ */
+gulp.task('libs:dev', function () {
+    return gulp.src(['./src/libs/*.js', '!./src/libs/temp/'])
+        .pipe(changed('./build/libs/'))
+        .pipe(gulp.dest('./build/libs/'))
 });
 
 /** JS
@@ -228,6 +238,7 @@ gulp.task('watch:dev', function () {
     gulp.watch('./src/img/**/*', gulp.parallel('images:dev'));
     gulp.watch('./src/fonts/**/*', gulp.parallel('fonts:dev'));
     gulp.watch('./src/files/**/*', gulp.parallel('files:dev'));
+    gulp.watch('./src/libs/**/*', gulp.parallel('libs:dev'));
     gulp.watch('./src/js/**/*.js', gulp.parallel('js:dev'));
 });
 
