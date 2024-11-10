@@ -188,7 +188,7 @@ gulp.task('html:docs', function () {
  * csso - минификация файла css, убирает все пробелы и отступы
  */
 gulp.task('sass:docs', function () {
-    return gulp.src('./src/scss/*.scss')
+    return gulp.src(['./src/scss/*.scss', './src/libs/**/*.css'])
         .pipe(changed('./docs/css'))
         .pipe(plumber(plumberNotify('SCSS')))
         // .pipe(sourceMaps.init())
@@ -260,6 +260,16 @@ gulp.task('files:docs', function () {
     return gulp.src('./src/files/**/*')
         .pipe(changed('./docs/files/'))
         .pipe(gulp.dest('./docs/files/'))
+});
+
+/** libs
+ * Копирование файлов стороних библиотек для использования в проекте, обработка файлов js идет из папки libs
+ * @src - любая папка внутри img и любой файл
+ */
+gulp.task('libs:docs', function () {
+    return gulp.src('./src/libs/**/*.js')
+        .pipe(changed('./docs/libs/'))
+        .pipe(gulp.dest('./docs/libs/'))
 });
 
 /** JS

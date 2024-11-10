@@ -133,7 +133,7 @@ gulp.task('html:dev', function () {
  * plumber(plumberSassConfig) - для отслеживания ошибок, и их отображения
  */
 gulp.task('sass:dev', function () {
-    return gulp.src(['./src/scss/*.scss', './src/libs/*.css', '!./src/libs/temp/'])
+    return gulp.src(['./src/scss/*.scss', './src/libs/**/*.css'])
         .pipe(changed('./build/css'))
         .pipe(plumber(plumberNotify('SCSS')))
         .pipe(sourceMaps.init())
@@ -185,7 +185,7 @@ gulp.task('files:dev', function () {
  * @src - любая папка внутри img и любой файл
  */
 gulp.task('libs:dev', function () {
-    return gulp.src(['./src/libs/*.js', '!./src/libs/temp/'])
+    return gulp.src('./src/libs/*/**/.js')
         .pipe(changed('./build/libs/'))
         .pipe(gulp.dest('./build/libs/'))
 });
