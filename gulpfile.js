@@ -12,7 +12,7 @@ require('./gulp/docs.js');
  */
 gulp.task('default', gulp.series(
     'clean:dev',
-    gulp.parallel('html:dev', 'sass:dev', 'images:dev', 'fonts:dev', 'files:dev', 'libs:dev',  'js:dev'),
+    gulp.parallel('html:dev', 'sass:dev', 'images:dev', 'fonts:dev', 'ttf2woff2:dev', 'files:dev', 'libs:dev',  'js:dev'),
     gulp.parallel('server:dev', 'watch:dev')
 ));
 
@@ -21,6 +21,6 @@ gulp.task('default', gulp.series(
  */
 gulp.task('docs', gulp.series(
     'clean:docs',
-    gulp.parallel('html:docs', 'sass:docs', 'images:docs', 'fonts:docs', 'files:docs', 'libs:docs', 'js:docs'),
+    gulp.parallel('html:docs', 'sass:docs', 'images:docs', 'fonts:docs', 'ttf2woff2:dev', 'files:docs', 'libs:docs', 'js:docs'),
     gulp.parallel('server:docs')
 ));

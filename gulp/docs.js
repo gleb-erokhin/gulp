@@ -115,6 +115,12 @@ const changed = require('gulp-changed');
  */
 const replace = require('gulp-replace');
 
+/** ttf2woff2
+ * Конвертация шрифта ttf в woff2
+ * 
+ */
+const ttf2woff2 = require('gulp-ttf2woff2');
+
 /* ============== VARS ============== */
 
 /** конфиг для includeFiles
@@ -213,18 +219,19 @@ gulp.task('sass:docs', function () {
  * @src - любая папка внутри img и любой файл
  * webp() - конвертация в webp картинку, работаем в два этапа, сначала проверяем картинки изменились они или нет, затем преобразовываем в webp сохраняем в папку dest, а потом опять берем и этой папки обрабатываем уже через imagemin и возвращаем в папку dest, все это используется с changed() чтобы так же не обрабатывать уже готовые файлы
  * @imageMin - есть проблема с именованием через плагин rename он все подряд переименовывает с папками, надо найти решение чтобы папки не трогал, или другой плагин надо
+ * @rename - почему то переименовывает все включая папки, конвертация в webp идет через @webp
 */
 gulp.task('images:docs', function () {
     return gulp.src('./src/img/**/*')
         .pipe(changed('./docs/img/'))
         .pipe(webp())
-        // .pipe(
-        //     imageMin([
-        //         imageminWebp({
-        //             quality: 85,
-        //         }),
-        //     ])
-        // )
+        .pipe(
+            imageMin([
+                imageminWebp({
+                    quality: 85,
+                }),
+            ])
+        )
         // .pipe(rename({ extname: '.webp' }))
         .pipe(gulp.dest('./docs/img/'))
         .pipe(gulp.src('./src/img/**/*'))
@@ -250,6 +257,22 @@ gulp.task('fonts:docs', function () {
     return gulp.src('./src/fonts/**/*')
         .pipe(changed('./docs/fonts/'))
         .pipe(gulp.dest('./docs/fonts/'))
+});
+
+/** ttf2woff2
+ * Конвертация шрифтов ttf в woff2
+ * @src - любая папка внутри fonts и ищем файлы ttf
+ */
+gulp.task('ttf2woff2:dev', () => {
+    return gulp
+        .src(['./src/fonts/**/*.ttf'], {
+            encoding: false, // Important!
+            removeBOM: false,
+        })
+        .pipe(ttf2woff2())
+        .pipe(changed('./build/fonts/'))
+        .pipe(ttf2woff2())
+        .pipe(gulp.dest('./build/fonts/'));
 });
 
 /** files

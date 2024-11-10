@@ -65,6 +65,13 @@ const changed = require('gulp-changed');
  */
 const replace = require('gulp-replace');
 
+/** ttf2woff2
+ * Конвертация шрифта ttf в woff2
+ * 
+ */
+const ttf2woff2 = require('gulp-ttf2woff2');
+
+
 
 /* ============== VARS ============== */
 
@@ -162,12 +169,28 @@ gulp.task('images:dev', function () {
 
 /** fonts
  * Копирование шрифтов
- * @src - любая папка внутри img и любой файл
+ * @src - любая папка внутри fonts и любой файл
  */
 gulp.task('fonts:dev', function () {
-    return gulp.src('./src/fonts/**/*')
+    return gulp.src(['./src/fonts/**/*', '!./src/fonts/**/*.ttf'])
         .pipe(changed('./build/fonts/'))
         .pipe(gulp.dest('./build/fonts/'))
+});
+
+/** ttf2woff2
+ * Конвертация шрифтов ttf в woff2
+ * @src - любая папка внутри fonts и ищем файлы ttf
+ */
+gulp.task('ttf2woff2:dev', () => {
+    return gulp
+        .src(['./src/fonts/**/*.ttf'], {
+            encoding: false, // Important!
+            removeBOM: false,
+        })
+        .pipe(ttf2woff2())
+        .pipe(changed('./build/fonts/'))
+        .pipe(ttf2woff2())
+        .pipe(gulp.dest('./build/fonts/'));
 });
 
 /** files
@@ -237,9 +260,10 @@ gulp.task('watch:dev', function () {
     gulp.watch('./src/**/*.html', gulp.parallel('html:dev'));
     gulp.watch('./src/img/**/*', gulp.parallel('images:dev'));
     gulp.watch('./src/fonts/**/*', gulp.parallel('fonts:dev'));
+    gulp.watch('./src/fonts/**/*', gulp.parallel('ttf2woff2:dev'));
     gulp.watch('./src/files/**/*', gulp.parallel('files:dev'));
     gulp.watch('./src/libs/**/*', gulp.parallel('libs:dev'));
-    gulp.watch('./src/js/**/*.js', gulp.parallel('js:dev'));
+    gulp.watch('./src/js/**/*.js', gulp.parallel('js:dev')); 
 });
 
 
