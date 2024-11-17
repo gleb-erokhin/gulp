@@ -3,6 +3,12 @@
 const gulp = require('gulp');
 const fileInclude = require('gulp-file-include'); // для использования include в html файлах
 
+/** webphtml
+ * 
+ * 
+ */
+const webphtml = require('gulp-webp-html');
+
 /** подключаем sass
  * @sassGlob - необходим для упрощенного подключения частей файлов scss
  */
@@ -52,6 +58,12 @@ const babel = require('gulp-babel');
  * 
  */
 const imageMin = require('gulp-imagemin');
+
+/** webp
+ * 
+ * 
+ */
+const webp = require('gulp-webp');
 
 /** 
  * использование в картинках, HTML, JS, CSS
@@ -128,6 +140,7 @@ gulp.task('html:dev', function () {
                 /(?<=src=|href=|srcset=)(['"])(\.(\.)?\/)*(img|images|fonts|css|scss|sass|js|files|audio|video)(\/[^\/'"]+(\/))?([^'"]*)\1/gi,
                 '$1./$4$5$7$1'
             ))
+        .pipe(webphtml())
         .pipe(gulp.dest('./build/'))
 });
 
@@ -163,6 +176,7 @@ gulp.task('sass:dev', function () {
 gulp.task('images:dev', function () {
     return gulp.src('./src/img/**/*')
         .pipe(changed('./build/img/'))
+        .pipe(webp())
         // .pipe(imageMin({ verbose: true }))
         .pipe(gulp.dest('./build/img/'))
 });
