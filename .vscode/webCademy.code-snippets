@@ -208,9 +208,9 @@
 	"CSS BG retina": {
 		"prefix": "mediaBg",
 		"body": [
-			"@include mediaBg() {",
-			"	background-image: url('./../img/${1:example}@2x.${2:jpg}');",
-			"}"
+			"<svg class=\"svg-icons svg-icons--${1:example}\">",
+			"	<use href=\"./img/svg-sprite/sprite.svg#${1:example}\"></use>",
+			"</svg>"
 		],
 		"description": "CSS BG retina"
 	},

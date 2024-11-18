@@ -11,13 +11,13 @@
   |- contacts.html    
   |- index.html
 
-
+# Include
 1.  @@include('./../blocks/header.html') - подключаем в файле post1.html
 2.  @@include('blocks/header.html') - подключаем в файле index.html
 3. <a href="./../index.html">Main page</a> - ссылка со страницы post.html
 
 
-
+# Заготовки Галп
 /** 
  * 
  * 
@@ -46,3 +46,7 @@ const xxx = require('xxx');
 const { error } = require('console');
 const { title } = require('process');
 const changed = require('gulp-changed');
+
+# Подключение svg sprite
+в папке ./img/scg-sprite лежит файл sprite.svg, в него добавляем иконки по аналогии которые необходимо управлять
+в файле _svg.scss css код для управление иконкой
