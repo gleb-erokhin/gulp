@@ -50,3 +50,7 @@ const changed = require('gulp-changed');
 # Подключение svg sprite
 в папке ./img/scg-sprite лежит файл sprite.svg, в него добавляем иконки по аналогии которые необходимо управлять
 в файле _svg.scss css код для управление иконкой
+
+<svg class="svg-icons">
+    <use href="./../../img/svg-sprite/sprite.svg#phone"></use>
+</svg>
