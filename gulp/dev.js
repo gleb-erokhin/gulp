@@ -6,9 +6,10 @@ const fileInclude = require('gulp-file-include'); // для использова
 /** webphtml
  * оборачивает img  в тег pictere, добавляет webp фото
  * включает в себя отсутствие обработки svg файлов чтобы их не оборачивал в picture
+ * formatHtml - 15/12/24 - форматирование исходного файла html в версии dev
  */
-// const webphtml = require('gulp-webp-html');
 const webphtml = require('gulp-webp-html-nosvg');
+const formatHtml = require(`gulp-format-html`)
 
 /** подключаем sass
  * @sassGlob - необходим для упрощенного подключения частей файлов scss
@@ -131,6 +132,7 @@ const plumberNotify = (title) => {
  * plumber(plumberNotify('html')) - отслеживание ошибок при работе с файлами, передаем функцию plumberNotify('html') - со значением html
  * ['path', '!path'] - при необходимости забирать html из разных папок можно с помощью массива передавать в src, ! знак исключает добавление в сборку
  * webphtml() - автоматически добавляет теги picture и sorce для использования webp изображения
+ * formatHtml - форматирование файла index.html после плагина include 15/12/24
  */
 gulp.task('html:dev', function () {
     return gulp.src(['./src/html/**/*.html', '!./src/html/blocks/*.html'])
@@ -143,6 +145,7 @@ gulp.task('html:dev', function () {
                 '$1./$4$5$7$1'
             ))
         .pipe(webphtml())
+        .pipe(formatHtml())
         .pipe(gulp.dest('./build/'))
 });
 
@@ -180,6 +183,9 @@ gulp.task('images:dev', function () {
         .pipe(changed('./build/img/'))
         .pipe(webp())
         // .pipe(imageMin({ verbose: true }))
+        .pipe(gulp.dest('./build/img/'))
+        .pipe(gulp.src('./src/img/**/*'))
+        .pipe(changed('./build/img/'))
         .pipe(gulp.dest('./build/img/'))
 });
 
@@ -235,13 +241,14 @@ gulp.task('libs:dev', function () {
  * документация по нему в файле webpack.config.js
  * plumberNotify('JS') - добавляем для отслеживания ошибок
  * babel() - конфиг добавляем в файле packege.json для совместимости старых браузеров
+ * отключение weback так как были проблемы в библиотеками, надо изучать webpack 15/12/24
  */
 gulp.task('js:dev', function () {
     return gulp.src('./src/js/*.js')
         .pipe(changed('./build/js/'))
         .pipe(plumber(plumberNotify('JS')))
         // .pipe(babel())
-        .pipe(webpack(require('./../webpack.config.js')))
+        // .pipe(webpack(require('./../webpack.config.js')))
         .pipe(gulp.dest('./build/js'))
 });
 

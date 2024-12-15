@@ -174,10 +174,9 @@ gulp.task('html:docs', function () {
         .pipe(fileInclude({ fileIncludeConfig }))
         .pipe(
             replace(
-                /(['"]?)(\.\.\/)+(img|images|fonts|css|scss|sass|js|files|audio|video)(\/[^\/'"]+(\/))?([^'"]*)\1/gi,
-                '$1$2$3$4$6$1'
-            )
-        )
+                /(?<=src=|href=|srcset=)(['"])(\.(\.)?\/)*(img|images|fonts|css|scss|sass|js|files|audio|video)(\/[^\/'"]+(\/))?([^'"]*)\1/gi,
+                '$1./$4$5$7$1'
+            ))
         .pipe(webphtml())
         .pipe(htmlclean())
         .pipe(gulp.dest('./docs/'))
@@ -301,13 +300,14 @@ gulp.task('libs:docs', function () {
  * документация по нему в файле webpack.config.js
  * plumberNotify('JS') - добавляем для отслеживания ошибок
  * babel() - конфиг добавляем в файле packege.json
+ * отключение weback так как были проблемы в библиотеками, надо изучать webpack 15/12/24
  */
 gulp.task('js:docs', function () {
     return gulp.src('./src/js/*.js')
         .pipe(changed('./docs/js/'))
         .pipe(plumber(plumberNotify('JS')))
-        .pipe(babel())
-        .pipe(webpack(require('../webpack.config.js')))
+        // .pipe(babel())
+        // .pipe(webpack(require('../webpack.config.js')))
         .pipe(gulp.dest('./docs/js'))
 });
 
