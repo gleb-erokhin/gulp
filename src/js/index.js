@@ -1,2 +1,11 @@
-import mobileNav from './modules/mobile-nav.js';
-mobileNav();
+// import mobileNav from './modules/mobile-nav.js';
+// mobileNav();
+const navBtn = document.querySelector('.mobile-nav-btn');
+const nav = document.querySelector('.mobile-nav');
+const menuIcon = document.querySelector('.nav-icon');
+
+navBtn.onclick = function () {
+    nav.classList.toggle('mobile-nav--open');
+    menuIcon.classList.toggle('nav-icon--active');
+    document.body.classList.toggle('no-scroll');
+};
