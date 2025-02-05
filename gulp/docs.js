@@ -50,6 +50,11 @@ const csso = require('gulp-csso');
  */
 const webpcss = require('gulp-webp-css');
 
+/**
+ * минимизация JS
+ */
+const terser = require('gulp-terser');
+
 /** сервер обновления страницы
  * 
  * 
@@ -275,10 +280,12 @@ gulp.task('files:docs', function () {
 /** libs
  * Копирование файлов стороних библиотек для использования в проекте, обработка файлов js идет из папки libs
  * @src - любая папка внутри img и любой файл
+ * @terser - минификация JS
  */
 gulp.task('libs:docs', function () {
     return gulp.src('./src/libs/**/*.js')
         .pipe(changed('./docs/libs/'))
+        .pipe(terser())
         .pipe(gulp.dest('./docs/libs/'))
 });
 
@@ -287,13 +294,13 @@ gulp.task('libs:docs', function () {
  * файл js будет для каждой страницы, после чего он объединяется в один файл js
  * документация по нему в файле webpack.config.js
  * plumberNotify('JS') - добавляем для отслеживания ошибок
- * babel() - конфиг добавляем в файле packege.json
- * отключение weback так как были проблемы в библиотеками, надо изучать webpack 15/12/24
+ * @terser - минификация JS
  */
 gulp.task('js:docs', function () {
-    return gulp.src('./src/js/*.js')
+    return gulp.src(['./src/js/*.js'])
         .pipe(changed('./docs/js/'))
         .pipe(plumber(plumberNotify('JS')))
+        .pipe(terser())
         .pipe(gulp.dest('./docs/js'))
 });
 
