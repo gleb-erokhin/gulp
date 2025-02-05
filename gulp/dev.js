@@ -43,12 +43,6 @@ const sourceMaps = require('gulp-sourcemaps');
 const plumber = require('gulp-plumber');
 const notify = require('gulp-notify');
 
-/** webpack
- * 
- * 
- */
-const webpack = require('webpack-stream');
-
 /** bable
  * добавляем в таск JS
  * 
@@ -247,8 +241,6 @@ gulp.task('js:dev', function () {
     return gulp.src('./src/js/*.js')
         .pipe(changed('./build/js/'))
         .pipe(plumber(plumberNotify('JS')))
-        // .pipe(babel())
-        // .pipe(webpack(require('./../webpack.config.js')))
         .pipe(gulp.dest('./build/js'))
 });
 

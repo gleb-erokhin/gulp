@@ -76,18 +76,6 @@ const groupMedia = require('gulp-group-css-media-queries');
 const plumber = require('gulp-plumber');
 const notify = require('gulp-notify');
 
-/** webpack
- * 
- * 
- */
-const webpack = require('webpack-stream');
-
-/** bable
- * добавляем в таск JS
- * 
- */
-const babel = require('gulp-babel');
-
 /** imagemin
  * для сжатия картинок
  * @imageminWebp - улучшенная обработка фото
@@ -306,8 +294,6 @@ gulp.task('js:docs', function () {
     return gulp.src('./src/js/*.js')
         .pipe(changed('./docs/js/'))
         .pipe(plumber(plumberNotify('JS')))
-        // .pipe(babel())
-        // .pipe(webpack(require('../webpack.config.js')))
         .pipe(gulp.dest('./docs/js'))
 });
 
