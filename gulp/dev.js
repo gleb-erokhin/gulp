@@ -16,6 +16,7 @@ const formatHtml = require(`gulp-format-html`);
  */
 const sass = require('gulp-sass')(require('sass'));
 const sassGlob = require('gulp-sass-glob');
+const webpCss = require('gulp-webp-css');
 
 /** сервер обновления страницы
  * 
@@ -164,6 +165,7 @@ gulp.task('sass:dev', function () {
         .pipe(sourceMaps.init())
         .pipe(sassGlob())
         .pipe(sass())
+        .pipe(webpCss())
         .pipe(
             replace(
                 /(['"]?)(\.\.\/)+(img|images|fonts|css|scss|sass|js|files|audio|video)(\/[^\/'"]+(\/))?([^'"]*)\1/gi,
